@@ -1,26 +1,187 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-bg: #050505;
+  --color-brand-bg-secondary: #0A0A0C;
+  --color-brand-blue: #0050FF;
+  --color-brand-cyan: #00D6FF;
+  --color-brand-text: rgba(255, 255, 255, 0.9);
+  --color-brand-text-muted: rgba(255, 255, 255, 0.6);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg: #050505; /* This matches the first frame color */
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  /* Smooth scrolling for anchor links */
+  scroll-behavior: smooth;
+}
+
+/* Glassmorphism utility */
+@utility glass {
+  background: rgba(5, 5, 5, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Glow effects */
+@utility text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+@utility text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #e0f7fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-brand-blue) 0%, var(--color-brand-cyan) 100%);
+}
+
+@utility border-gradient {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--color-brand-blue), var(--color-brand-cyan));
+    z-index: -1;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Base resets for Next.js App Router */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* =========================================
+   SCROLL-DRIVEN CSS ANIMATIONS
+   ========================================= */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 30%;
+    }
+
+    .scroll-scale-reveal {
+      animation: scale-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 35%;
+    }
+
+    .scroll-reveal-left {
+      animation: reveal-left linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 30%;
+    }
+
+    .scroll-reveal-right {
+      animation: reveal-right linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 30%;
+    }
+
+    .scroll-blur-reveal {
+      animation: blur-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 35%;
+    }
+
+    .reveal-group > * {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+    }
+    
+    /* Staggered grid items by tweaking animation range */
+    .reveal-group > *:nth-child(1) { animation-range: entry 5% cover 30%; }
+    .reveal-group > *:nth-child(2) { animation-range: entry 10% cover 35%; }
+    .reveal-group > *:nth-child(3) { animation-range: entry 15% cover 40%; }
+    .reveal-group > *:nth-child(4) { animation-range: entry 20% cover 45%; }
+    .reveal-group > *:nth-child(5) { animation-range: entry 25% cover 50%; }
+    .reveal-group > *:nth-child(6) { animation-range: entry 30% cover 55%; }
+    .reveal-group > *:nth-child(n+7) { animation-range: entry 35% cover 60%; }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes reveal-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes reveal-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes blur-reveal {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
 }

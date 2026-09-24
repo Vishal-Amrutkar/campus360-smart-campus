@@ -1,0 +1,73 @@
+{
+  "title": "MCA SEM-I Section A",
+  "effective_date": "23/09/2026",
+  "college": "ASM's Institute of Business Management & Research",
+  "location": "Chinchwad, Pune - 411019",
+  "times": [
+    {"id": "t1", "start": "09:30", "end": "10:30", "label": "09:30 AM - 10:30 AM"},
+    {"id": "t2", "start": "10:30", "end": "11:30", "label": "10:30 AM - 11:30 AM"},
+    {"id": "t3", "start": "11:30", "end": "12:30", "label": "11:30 AM - 12:30 PM"},
+    {"id": "recess1", "start": "12:30", "end": "13:30", "label": "12:30 PM - 01:30 PM", "is_recess": true},
+    {"id": "t4", "start": "13:30", "end": "14:30", "label": "01:30 PM - 02:30 PM"},
+    {"id": "t5", "start": "14:30", "end": "15:30", "label": "02:30 PM - 03:30 PM"},
+    {"id": "t6", "start": "15:30", "end": "16:30", "label": "03:30 PM - 04:30 PM"},
+    {"id": "t7", "start": "16:30", "end": "17:30", "label": "04:30 PM - 05:30 PM"}
+  ],
+  "schedule": {
+    "Monday": [
+      {"start": "09:30", "end": "10:30", "subject": "PP", "faculty_initials": "SP", "span": 1},
+      {"start": "10:30", "end": "11:30", "subject": "ADBMS", "faculty_initials": "VJ", "span": 1},
+      {"start": "11:30", "end": "12:30", "subject": "SS-I", "faculty_initials": "RM", "span": 1},
+      {"start": "12:30", "end": "13:30", "subject": "RECESS", "is_recess": true, "span": 1},
+      {"start": "13:30", "end": "14:30", "subject": "SEPM", "faculty_initials": "SD", "span": 1},
+      {"start": "14:30", "end": "16:30", "subject": "PP Lab", "faculty_initials": "PK", "span": 2},
+      {"start": "16:30", "end": "17:30", "subject": "Mini Project", "faculty_initials": "", "span": 1}
+    ],
+    "Tuesday": [
+      {"start": "09:30", "end": "10:30", "subject": "Elective-I", "faculty_initials": "", "span": 1},
+      {"start": "10:30", "end": "11:30", "subject": "SEPM", "faculty_initials": "SD", "span": 1},
+      {"start": "11:30", "end": "12:30", "subject": "SS-I", "faculty_initials": "RM", "span": 1},
+      {"start": "12:30", "end": "13:30", "subject": "RECESS", "is_recess": true, "span": 1},
+      {"start": "13:30", "end": "14:30", "subject": "ADBMS", "faculty_initials": "VJ", "span": 1},
+      {"start": "14:30", "end": "16:30", "subject": "DSA", "faculty_initials": "MD", "span": 2},
+      {"start": "16:30", "end": "17:30", "subject": "Mentor-Mentee", "faculty_initials": "", "span": 1}
+    ],
+    "Wednesday": [
+      {"start": "09:30", "end": "10:30", "subject": "DSA", "faculty_initials": "MD", "span": 1},
+      {"start": "10:30", "end": "11:30", "subject": "SEPM", "faculty_initials": "SD", "span": 1},
+      {"start": "11:30", "end": "12:30", "subject": "PP", "faculty_initials": "SP", "span": 1},
+      {"start": "12:30", "end": "13:30", "subject": "RECESS", "is_recess": true, "span": 1},
+      {"start": "13:30", "end": "14:30", "subject": "Elective-I", "faculty_initials": "", "span": 1},
+      {"start": "14:30", "end": "16:30", "subject": "DSA Lab", "faculty_initials": "SS1", "span": 2},
+      {"start": "16:30", "end": "17:30", "subject": "Mini Project", "faculty_initials": "", "span": 1}
+    ],
+    "Thursday": [
+      {"start": "09:30", "end": "10:30", "subject": "Library", "faculty_initials": "", "span": 1},
+      {"start": "10:30", "end": "12:30", "subject": "BS", "faculty_initials": "LJ", "span": 2},
+      {"start": "12:30", "end": "13:30", "subject": "RECESS", "is_recess": true, "span": 1},
+      {"start": "13:30", "end": "15:30", "subject": "ADBMS", "faculty_initials": "VJ", "span": 2},
+      {"start": "15:30", "end": "16:30", "subject": "Mini Project", "faculty_initials": "", "span": 1},
+      {"start": "16:30", "end": "17:30", "subject": "Club/Society", "faculty_initials": "", "span": 1}
+    ],
+    "Friday": [
+      {"start": "09:30", "end": "10:30", "subject": "PP", "faculty_initials": "SP", "span": 1},
+      {"start": "10:30", "end": "12:30", "subject": "BS", "faculty_initials": "LJ", "span": 2},
+      {"start": "12:30", "end": "13:30", "subject": "RECESS", "is_recess": true, "span": 1},
+      {"start": "13:30", "end": "14:30", "subject": "Elective-I", "faculty_initials": "", "span": 1},
+      {"start": "14:30", "end": "15:30", "subject": "DSA", "faculty_initials": "MD", "span": 1},
+      {"start": "15:30", "end": "16:30", "subject": "Mini Project", "faculty_initials": "", "span": 1},
+      {"start": "16:30", "end": "17:30", "subject": "Club/Society", "faculty_initials": "", "span": 1}
+    ],
+    "Saturday": [
+      {"start": "09:30", "end": "12:30", "subject": "Workshop / Guest Lecture", "faculty_initials": "", "span": 3},
+      {"start": "12:30", "end": "13:30", "subject": "RECESS", "is_recess": true, "span": 1},
+      {"start": "13:30", "end": "17:30", "subject": "Club Activity", "faculty_initials": "", "span": 4}
+    ]
+  },
+  "electives": {
+    "FOCC": "Prof. Prasad Mahamuni",
+    "WD": "Prof. Leena Patil / Prof. Nandini Umap",
+    "FODS": "Prof. Ranjeeta Mondol",
+    "ITCS": "Prof. Sakshi Kulkarni"
+  }
+}

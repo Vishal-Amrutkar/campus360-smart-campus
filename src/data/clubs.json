@@ -1,0 +1,72 @@
+[
+  {
+    "id": "c1",
+    "name": "Technical Club",
+    "description": "Fostering technical skills and innovation among students.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c2",
+    "name": "Social Club",
+    "description": "Engaging in social welfare and community service activities.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c3",
+    "name": "Cultural Club",
+    "description": "Celebrating diversity through art, dance, and cultural events.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c4",
+    "name": "Photography Club",
+    "description": "Capturing campus memories and teaching photography skills.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c5",
+    "name": "Crafting Club",
+    "description": "Exploring creativity through hands-on crafting and design.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c6",
+    "name": "Digital Club",
+    "description": "Focusing on digital marketing, media, and online presence.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c7",
+    "name": "Innovation Club",
+    "description": "Encouraging out-of-the-box thinking and startup ideas.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c8",
+    "name": "[ADD CLUB]",
+    "description": "Description coming soon.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c9",
+    "name": "[ADD CLUB]",
+    "description": "Description coming soon.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  },
+  {
+    "id": "c10",
+    "name": "[ADD CLUB]",
+    "description": "Description coming soon.",
+    "head": "[ADD NAME]",
+    "members": ["[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]", "[ADD NAME]"]
+  }
+]

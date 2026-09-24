@@ -1,0 +1,17 @@
+{
+  "principal": "[ADD PRINCIPAL NAME]",
+  "hod": "[ADD HOD NAME]",
+  "rpss": {
+    "president": "[ADD NAME]",
+    "vice_president": "[ADD NAME]",
+    "mc_representative": "[ADD NAME]",
+    "treasurer": "[ADD NAME]",
+    "oracle": "[ADD NAME]",
+    "office_bearers": []
+  },
+  "remaining_clubs": [
+    "[ADD CLUB]",
+    "[ADD CLUB]",
+    "[ADD CLUB]"
+  ]
+}

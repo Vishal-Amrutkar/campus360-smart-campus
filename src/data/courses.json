@@ -1,0 +1,29 @@
+[
+  {
+    "id": "mca",
+    "name": "MCA",
+    "description": "Master of Computer Applications",
+    "semester": "Semester I",
+    "section": "Section A",
+    "location": "3rd Floor",
+    "has_data": true
+  },
+  {
+    "id": "pgdm",
+    "name": "PGDM",
+    "description": "Post Graduate Diploma in Management",
+    "semester": "Information coming soon",
+    "section": "Information coming soon",
+    "location": "Information coming soon",
+    "has_data": false
+  },
+  {
+    "id": "icrm",
+    "name": "ICRM",
+    "description": "Institute of Customer Relationship Management",
+    "semester": "Information coming soon",
+    "section": "Information coming soon",
+    "location": "Information coming soon",
+    "has_data": false
+  }
+]

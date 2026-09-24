@@ -1,0 +1,86 @@
+[
+  {
+    "id": "f1",
+    "name": "Prof. Sanjana Pawle",
+    "initials": "SP",
+    "subjects": ["PP", "Programming Principles"],
+    "role": ""
+  },
+  {
+    "id": "f2",
+    "name": "Prof. Milind Deshkar",
+    "initials": "MD",
+    "subjects": ["DSA", "Data Structures & Algorithms"],
+    "role": "1st Year Coordinator"
+  },
+  {
+    "id": "f3",
+    "name": "Prof. Vijaya Jadhav",
+    "initials": "VJ",
+    "subjects": ["ADBMS", "Advanced Database Management Systems"],
+    "role": ""
+  },
+  {
+    "id": "f4",
+    "name": "Prof. Shivani Dhabadge",
+    "initials": "SD",
+    "subjects": ["SEPM", "Software Engineering & Project Management"],
+    "role": "Class Teacher"
+  },
+  {
+    "id": "f5",
+    "name": "Prof. Laxmi Jasti",
+    "initials": "LJ",
+    "subjects": ["BS"],
+    "role": ""
+  },
+  {
+    "id": "f6",
+    "name": "Prof. Ranjeeta Mondol",
+    "initials": "RM",
+    "subjects": ["FODS", "SS-I"],
+    "role": ""
+  },
+  {
+    "id": "f7",
+    "name": "Prof. Prasad Mahamuni",
+    "initials": "PM",
+    "subjects": ["FOCC"],
+    "role": ""
+  },
+  {
+    "id": "f8",
+    "name": "Prof. Leena Patil",
+    "initials": "LP",
+    "subjects": ["WD"],
+    "role": ""
+  },
+  {
+    "id": "f9",
+    "name": "Prof. Nandini Umap",
+    "initials": "NU",
+    "subjects": ["WD"],
+    "role": ""
+  },
+  {
+    "id": "f10",
+    "name": "Prof. Sakshi Kulkarni",
+    "initials": "SK",
+    "subjects": ["ITCS"],
+    "role": ""
+  },
+  {
+    "id": "f11",
+    "name": "Prof. Sudhir Sitanagre",
+    "initials": "SS1",
+    "subjects": ["DSA Lab"],
+    "role": ""
+  },
+  {
+    "id": "f12",
+    "name": "Prof. Prashant Kori",
+    "initials": "PK",
+    "subjects": ["PP Lab"],
+    "role": ""
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "RPSS",
+  "full_name": "Student Society",
+  "description": "A student-created organization responsible for student activities, coordination and representation.",
+  "roles": [
+    "HOD",
+    "President",
+    "Vice President",
+    "MC Representative",
+    "Treasurer",
+    "Oracle",
+    "Office Bearers"
+  ]
+}
