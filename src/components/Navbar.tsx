@@ -36,7 +36,7 @@ export default function Navbar() {
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.35, ease: "easeInOut" }}
       className={`fixed top-0 w-full z-40 transition-colors duration-300 ${
-        isScrolled ? "glass border-b border-white/5" : "bg-transparent"
+        isScrolled ? "glass-always border-b border-white/5" : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -58,7 +58,7 @@ export default function Navbar() {
         </div>
 
         <div>
-          <button className="px-5 py-2 text-sm font-medium text-white rounded-full border-gradient glass hover:text-glow transition-all duration-300">
+          <button className="px-5 py-2 text-sm font-medium text-white rounded-full border-gradient glass-always hover:text-glow transition-all duration-300">
             Explore Campus360
           </button>
         </div>

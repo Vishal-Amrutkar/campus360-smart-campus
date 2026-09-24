@@ -25,8 +25,24 @@ body {
   scroll-behavior: smooth;
 }
 
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
+
 /* Glassmorphism utility */
 @utility glass {
+  background: rgba(5, 5, 5, 0.9);
+  
+  @media (min-width: 768px) {
+    background: rgba(5, 5, 5, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* Glassmorphism that always applies (even on mobile) */
+@utility glass-always {
   background: rgba(5, 5, 5, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
