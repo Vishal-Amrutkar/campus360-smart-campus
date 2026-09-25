@@ -145,6 +145,15 @@ body {
   }
 }
 
+/* Fallback for browsers without animation-timeline support */
+@supports not (animation-timeline: view()) {
+  .scroll-reveal, .scroll-scale-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-blur-reveal, .reveal-group > * {
+    animation: reveal-up 0.8s ease-out forwards;
+    /* In a real scenario, this would be triggered by an IntersectionObserver adding a class.
+       For pure CSS fallback, we simply play the animation on load. */
+  }
+}
+
 @keyframes reveal-up {
   from {
     opacity: 0;

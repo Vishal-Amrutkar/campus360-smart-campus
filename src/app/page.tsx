@@ -3,25 +3,26 @@
 import { useState, useEffect } from "react";
 import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
-import ScrollCanvas from "@/components/ScrollCanvas";
+import dynamic from "next/dynamic";
+const ScrollCanvas = dynamic(() => import("@/components/ScrollCanvas"), { ssr: false });
 import TextOverlays from "@/components/TextOverlays";
 import Footer from "@/components/Footer";
 import AIAssistant from "@/components/AIAssistant";
 
-// New Sections
-import FeaturesGrid from "@/components/FeaturesGrid";
-import CampusMap from "@/components/sections/CampusMap";
-import CampusOverview from "@/components/sections/CampusOverview";
-import CoursesSection from "@/components/sections/CoursesSection";
-import OrganizationChart from "@/components/sections/OrganizationChart";
-import FacultySection from "@/components/sections/FacultySection";
-import RPSSSection from "@/components/sections/RPSSSection";
-import ClubsSection from "@/components/sections/ClubsSection";
-import TimetableSection from "@/components/sections/TimetableSection";
-import EventsSection from "@/components/sections/EventsSection";
-import CTASection from "@/components/sections/CTASection";
-import AIAssistantSection from "@/components/sections/AIAssistantSection";
-import NoticesSection from "@/components/sections/NoticesSection";
+// Lazy loaded sections
+const FeaturesGrid = dynamic(() => import("@/components/FeaturesGrid"));
+const CampusMap = dynamic(() => import("@/components/sections/CampusMap"));
+const CampusOverview = dynamic(() => import("@/components/sections/CampusOverview"));
+const CoursesSection = dynamic(() => import("@/components/sections/CoursesSection"));
+const OrganizationChart = dynamic(() => import("@/components/sections/OrganizationChart"));
+const FacultySection = dynamic(() => import("@/components/sections/FacultySection"));
+const RPSSSection = dynamic(() => import("@/components/sections/RPSSSection"));
+const ClubsSection = dynamic(() => import("@/components/sections/ClubsSection"));
+const TimetableSection = dynamic(() => import("@/components/sections/TimetableSection"));
+const EventsSection = dynamic(() => import("@/components/sections/EventsSection"));
+const CTASection = dynamic(() => import("@/components/sections/CTASection"));
+const AIAssistantSection = dynamic(() => import("@/components/sections/AIAssistantSection"));
+const NoticesSection = dynamic(() => import("@/components/sections/NoticesSection"));
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
