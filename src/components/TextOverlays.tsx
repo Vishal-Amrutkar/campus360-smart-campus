@@ -176,11 +176,12 @@ export default function TextOverlays({ progress }: TextOverlaysProps) {
         style={{ opacity: ctaOpacity, y: ctaY }}
         className="absolute inset-0 flex flex-col justify-center items-center px-6 text-center"
       >
-        <div className="max-w-3xl pointer-events-auto">
-          <h2 className="text-6xl md:text-8xl font-bold tracking-tight text-white mb-6">
-            Know your campus.<br/><span className="text-white/40">Own your day.</span>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.7)_0%,transparent_60%)] -z-10" />
+        <div className="max-w-3xl pointer-events-auto drop-shadow-2xl">
+          <h2 className="text-6xl md:text-8xl font-bold tracking-tight text-white mb-6 [text-shadow:_0_4px_24px_rgb(0_0_0_/_50%)]">
+            Know your campus.<br/><span className="text-white/70">Own your day.</span>
           </h2>
-          <p className="text-2xl text-white/70 mb-10 text-gradient">
+          <p className="text-2xl text-white/90 mb-10 text-gradient [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)]">
             Campus360. Designed for students. Built for every college.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

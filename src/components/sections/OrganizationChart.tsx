@@ -20,21 +20,23 @@ export default function OrganizationChart() {
 
         <div className="flex flex-col items-center reveal-group">
           {/* Principal */}
-          <div 
-            className="glass border border-white/20 rounded-2xl p-6 min-w-[280px] shadow-2xl relative scroll-scale-reveal"
-          >
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-blue text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-              Principal
-            </div>
-            <div className="text-xl font-bold text-white mt-2">{configData.principal}</div>
-          </div>
+          {configData.principal && (
+            <>
+              <div className="glass border border-white/20 rounded-2xl p-6 min-w-[280px] shadow-2xl relative scroll-scale-reveal">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-blue text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                  Principal
+                </div>
+                <div className="text-xl font-bold text-white mt-2">{configData.principal}</div>
+              </div>
 
-          {/* Line connecting Principal and HOD */}
-          <motion.div 
-            initial={{ height: 0 }}
-            whileInView={{ height: 48 }}
-            className="w-[2px] bg-gradient-to-b from-brand-blue to-brand-cyan my-0"
-          />
+              {/* Line connecting Principal and HOD */}
+              <motion.div 
+                initial={{ height: 0 }}
+                whileInView={{ height: 48 }}
+                className="w-[2px] bg-gradient-to-b from-brand-blue to-brand-cyan my-0"
+              />
+            </>
+          )}
 
           {/* HOD */}
           <div 

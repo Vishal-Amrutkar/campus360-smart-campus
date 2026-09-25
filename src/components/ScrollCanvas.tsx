@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useScroll, useSpring, MotionValue } from "framer-motion";
 
-export const TOTAL_FRAMES = 120;
+export const TOTAL_FRAMES = 300;
 
 interface ScrollCanvasProps {
   children?: (progress: MotionValue<number>) => React.ReactNode;
@@ -12,253 +12,152 @@ interface ScrollCanvasProps {
 export default function ScrollCanvas({ children }: ScrollCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  // State for loader
   const [isReady, setIsReady] = useState(false);
-  
-  // Framer motion for children (TextOverlays) only - no React state for canvas loop
+
+  // Only used to drive the text overlays passed in as children — unrelated
+  // to the canvas frame drawing below, so it's untouched by that logic.
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ["start start", "end end"],
   });
-  
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   useEffect(() => {
-    let rAFId: number;
-    let isMobile = window.innerWidth < 768;
-    const isVisible = { current: true };
-    const bitmaps: (ImageBitmap | null)[] = new Array(TOTAL_FRAMES).fill(null);
+    const canvasMaybeNull = canvasRef.current;
+    const containerMaybeNull = containerRef.current;
+    if (!canvasMaybeNull || !containerMaybeNull) return;
+    const ctxMaybeNull = canvasMaybeNull.getContext("2d");
+    if (!ctxMaybeNull) return;
+
+    // Rebind as fresh consts with explicit non-null types. TypeScript's
+    // control-flow narrowing from the checks above does not carry into
+    // nested functions declared below (resizeCanvas, drawFrame, getProgress,
+    // etc.), since it can't prove those closures only ever run after this point.
+    const canvas: HTMLCanvasElement = canvasMaybeNull;
+    const container: HTMLDivElement = containerMaybeNull;
+    const ctx: CanvasRenderingContext2D = ctxMaybeNull;
+
+    // Plain <img> elements. The browser owns decoding/caching — no manual
+    // ImageBitmap cache, no eviction, no closing, nothing to get stale.
+    const images: HTMLImageElement[] = new Array(TOTAL_FRAMES);
     let drawRect = { x: 0, y: 0, w: 0, h: 0 };
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    
-    // Canvas context
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
-    if (!ctx) return;
+    let currentFrame = -1;
+    let ticking = false; // rAF-throttle flag for scroll events
 
-    // Load function
-    const loadFrame = async (i: number): Promise<void> => {
-      if (bitmaps[i]) return;
-      try {
-        const padded = (i + 1).toString().padStart(4, "0");
-        const folder = isMobile ? "mobile" : "desktop";
-        const res = await fetch(`/frames/${folder}/frame_${padded}.webp`);
-        if (!res.ok) return;
-        const blob = await res.blob();
-        const bitmap = await createImageBitmap(blob);
-        bitmaps[i] = bitmap;
-      } catch (e) {
-        console.warn(`Failed to load frame ${i}`);
-      }
-    };
+    function frameUrl(index: number) {
+      const padded = String(index + 1).padStart(4, "0");
+      return `/frames/frame_${padded}.jpg`;
+    }
 
-    // Sliding window logic for mobile
-    const manageCache = (currentIndex: number) => {
-      if (!isMobile) return;
-      const windowSize = 40;
-      const half = windowSize / 2;
-      for (let i = 0; i < TOTAL_FRAMES; i++) {
-        if (Math.abs(i - currentIndex) > half) {
-          if (bitmaps[i]) {
-            bitmaps[i]?.close();
-            bitmaps[i] = null;
-          }
-        } else {
-          // prefetch nearby if missing
-          if (!bitmaps[i] && !prefersReducedMotion) {
-             if (window.requestIdleCallback) {
-                window.requestIdleCallback(() => loadFrame(i));
-             } else {
-                setTimeout(() => loadFrame(i), 0);
-             }
-          }
-        }
-      }
-    };
-
-    // Progressive Initial Load
-    const initialLoad = async () => {
-      const initialIndices = [];
-      for (let i = 0; i < TOTAL_FRAMES; i += 8) {
-        initialIndices.push(i);
-      }
-      if (!initialIndices.includes(TOTAL_FRAMES - 1)) {
-        initialIndices.push(TOTAL_FRAMES - 1);
-      }
-      
-      // If reduced motion, just load the first frame and stop
-      if (prefersReducedMotion) {
-        await loadFrame(0);
-        setIsReady(true);
-        return;
-      }
-
-      await Promise.all(initialIndices.map(i => loadFrame(i)));
-      setIsReady(true);
-      
-      // Load the rest in background
-      let remaining: number[] = [];
-      for (let i = 0; i < TOTAL_FRAMES; i++) {
-        if (!initialIndices.includes(i)) remaining.push(i);
-      }
-      
-      const loadNext = () => {
-        if (remaining.length === 0) return;
-        const i = remaining.shift();
-        if (i !== undefined && !bitmaps[i]) {
-           loadFrame(i).then(() => {
-             if (window.requestIdleCallback) {
-               window.requestIdleCallback(loadNext);
-             } else {
-               setTimeout(loadNext, 50);
-             }
-           });
-        } else {
-           loadNext();
-        }
-      };
-      
-      if (!isMobile) {
-        loadNext();
-      }
-    };
-
-    initialLoad();
-
-    // Scroll state
-    let targetScroll = 0;
-    let currentScroll = 0;
-    let lastRenderedFrame = -1;
-    let containerHeight = window.innerHeight * 5; 
-    let lastTime = performance.now();
-
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      // Get offset from top of document
-      const rect = containerRef.current.getBoundingClientRect();
-      const offsetTop = window.scrollY + rect.top;
-      
-      let raw = (window.scrollY - offsetTop) / (containerHeight - window.innerHeight);
-      targetScroll = Math.max(0, Math.min(1, raw));
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    const handleResize = () => {
-      isMobile = window.innerWidth < 768;
-      if (containerRef.current) {
-        containerHeight = containerRef.current.offsetHeight;
-      }
-      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 1.5);
+    function resizeCanvas() {
+      const isMobile = window.innerWidth < 768;
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
-      
       drawRect = { x: 0, y: 0, w: 0, h: 0 }; // force recompute
-      
-      handleScroll();
-      lastRenderedFrame = -1; // force redraw
-    };
+      currentFrame = -1; // force redraw at new size
+    }
 
-    let resizeTimeout: NodeJS.Timeout;
-    const throttledResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleResize, 150);
-    };
-    window.addEventListener("resize", throttledResize, { passive: true });
-    
-    // Initial setup
-    handleResize();
+    function drawFrame(index: number) {
+      const img = images[index];
+      if (!img || !img.complete || img.naturalWidth === 0) return;
 
-    // Visibility observer
-    const handleVis = () => { isVisible.current = !document.hidden; };
-    document.addEventListener("visibilitychange", handleVis);
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisible.current = entry.isIntersecting && !document.hidden;
-    });
-    if (containerRef.current) observer.observe(containerRef.current);
-
-    // Render loop
-    const loop = (time: number) => {
-      rAFId = requestAnimationFrame(loop);
-      
-      if (!isVisible.current || !isReady) {
-        lastTime = time;
-        return;
-      }
-
-      const dt = (time - lastTime) / 1000;
-      lastTime = time;
-
-      // If reduced motion, just stay at 0
-      if (prefersReducedMotion) {
-        targetScroll = 0;
-      }
-
-      // Frame-rate independent damping
-      if (Math.abs(targetScroll - currentScroll) > 0.0001) {
-        currentScroll += (targetScroll - currentScroll) * (1 - Math.exp(-dt * 10));
-      } else {
-        currentScroll = targetScroll;
-      }
-
-      const frameIndex = Math.round(currentScroll * (TOTAL_FRAMES - 1));
-
-      if (frameIndex !== lastRenderedFrame) {
-        lastRenderedFrame = frameIndex;
-        if (!prefersReducedMotion) {
-          manageCache(frameIndex);
+      if (drawRect.w === 0) {
+        const canvasRatio = canvas.width / canvas.height;
+        const imgRatio = img.naturalWidth / img.naturalHeight;
+        if (canvasRatio > imgRatio) {
+          drawRect.w = canvas.width;
+          drawRect.h = canvas.width / imgRatio;
+          drawRect.x = 0;
+          drawRect.y = (canvas.height - drawRect.h) / 2;
+        } else {
+          drawRect.h = canvas.height;
+          drawRect.w = canvas.height * imgRatio;
+          drawRect.y = 0;
+          drawRect.x = (canvas.width - drawRect.w) / 2;
         }
+      }
 
-        // Draw closest available frame
-        let idxToDraw = frameIndex;
-        while (idxToDraw >= 0 && !bitmaps[idxToDraw]) {
-           idxToDraw--;
-        }
-        
-        const bitmap = bitmaps[idxToDraw];
-        if (bitmap && ctx) {
-          // Precompute drawRect once per resize
-          if (drawRect.w === 0 && bitmap.width > 0) {
-            const canvasRatio = canvas.width / canvas.height;
-            const imgRatio = bitmap.width / bitmap.height;
-            if (canvasRatio > imgRatio) {
-              drawRect.h = canvas.width / imgRatio;
-              drawRect.w = canvas.width;
-              drawRect.y = (canvas.height - drawRect.h) / 2;
-              drawRect.x = 0;
-            } else {
-              drawRect.w = canvas.height * imgRatio;
-              drawRect.h = canvas.height;
-              drawRect.x = (canvas.width - drawRect.w) / 2;
-              drawRect.y = 0;
-            }
+      ctx.fillStyle = "#050505";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, drawRect.x, drawRect.y, drawRect.w, drawRect.h);
+    }
+
+    function getProgress() {
+      const rect = container.getBoundingClientRect();
+      const scrollableDistance = container.offsetHeight - window.innerHeight;
+      if (scrollableDistance <= 0) return 0;
+      const scrolled = -rect.top;
+      return Math.max(0, Math.min(1, scrolled / scrollableDistance));
+    }
+
+    function renderCurrentFrame() {
+      ticking = false;
+      const progress = getProgress();
+      const frameIndex = Math.round(progress * (TOTAL_FRAMES - 1));
+      if (frameIndex !== currentFrame) {
+        currentFrame = frameIndex;
+        drawFrame(frameIndex);
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(renderCurrentFrame);
+    }
+
+    function onResize() {
+      resizeCanvas();
+      renderCurrentFrame();
+    }
+
+    // Preload every frame. Frame 0 is awaited first so something is on
+    // screen immediately; the rest load after, in order.
+    async function preload() {
+      const first = new Image();
+      first.src = frameUrl(0);
+      images[0] = first;
+      try {
+        await first.decode();
+      } catch {
+        await new Promise<void>((resolve) => {
+          first.onload = () => resolve();
+          first.onerror = () => resolve();
+        });
+      }
+      resizeCanvas();
+      drawFrame(0);
+      currentFrame = 0;
+      setIsReady(true);
+
+      for (let i = 1; i < TOTAL_FRAMES; i++) {
+        const img = new Image();
+        img.onload = () => {
+          if (currentFrame === i) {
+            drawFrame(i);
           }
-          
-          ctx.fillStyle = "#050505";
-          ctx.fillRect(0, 0, canvas.width, canvas.height); 
-          ctx.drawImage(bitmap, drawRect.x, drawRect.y, drawRect.w, drawRect.h);
-        }
+        };
+        img.src = frameUrl(i);
+        images[i] = img;
       }
-    };
-    
-    rAFId = requestAnimationFrame(loop);
+    }
+
+    resizeCanvas();
+    preload();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
 
     return () => {
-      cancelAnimationFrame(rAFId);
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", throttledResize);
-      document.removeEventListener("visibilitychange", handleVis);
-      observer.disconnect();
-      clearTimeout(resizeTimeout);
-      bitmaps.forEach(b => b?.close());
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
     };
-  }, [isReady]);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative w-full h-[500vh]">
@@ -271,7 +170,7 @@ export default function ScrollCanvas({ children }: ScrollCanvasProps) {
         <canvas
           ref={canvasRef}
           className="w-full h-full object-cover bg-[#050505]"
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
         />
         {children && children(smoothProgress)}
       </div>

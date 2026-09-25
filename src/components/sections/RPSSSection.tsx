@@ -8,7 +8,7 @@ export default function RPSSSection() {
   const leadership = [
     { role: "President", name: configData.rpss.president },
     { role: "Vice President", name: configData.rpss.vice_president },
-    { role: "MC Representative", name: configData.rpss.mc_representative },
+    { role: "MCA Representative", name: configData.rpss.mca_representative },
     { role: "Treasurer", name: configData.rpss.treasurer },
     { role: "Oracle", name: configData.rpss.oracle }
   ];

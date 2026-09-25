@@ -8,24 +8,48 @@ export class CampusAssistantProvider {
   static async ask(question: string): Promise<string> {
     const q = question.toLowerCase();
 
+    // Intent: Location (e.g. MCA class)
+    if (q.includes("where") || q.includes("location") || q.includes("room")) {
+      if (q.includes("mca")) {
+        return "MCA classes are currently scheduled on the **3rd floor**.";
+      }
+      return "I only have location information for MCA classes right now (3rd floor).";
+    }
+
     // Intent: Timetable / Next Class
-    if (q.includes("timetable") || q.includes("class do i have") || q.includes("next class")) {
+    if (q.includes("timetable") || q.includes("schedule") || q.includes("class do i have") || q.includes("next class") || (q.includes("class") && (q.includes("now") || q.includes("today") || q.includes("currently") || q.includes("which")))) {
       const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       const now = new Date();
-      const currentDay = days[now.getDay()];
+      let targetDay = days[now.getDay()];
+
+      // Check if user is asking for a specific day
+      if (q.includes("tomorrow")) {
+        targetDay = days[(now.getDay() + 1) % 7];
+      } else {
+        const lowerDays = days.map(d => d.toLowerCase());
+        for (const day of lowerDays) {
+          if (q.includes(day)) {
+            targetDay = day.charAt(0).toUpperCase() + day.slice(1);
+            break;
+          }
+        }
+      }
       
-      if (currentDay === "Sunday") {
-        return "It's Sunday! There are no classes scheduled for today.";
+      if (targetDay === "Sunday") {
+        return `It's Sunday! There are no classes scheduled for ${targetDay.toLowerCase() === days[now.getDay()].toLowerCase() ? 'today' : targetDay}.`;
       }
 
-      const scheduleForDay = timetableData.schedule[currentDay as keyof typeof timetableData.schedule];
+      const scheduleForDay = timetableData.schedule[targetDay as keyof typeof timetableData.schedule];
       if (!scheduleForDay) {
-        return `I don't have the timetable for ${currentDay} right now.`;
+        return `I don't have the timetable for ${targetDay} right now.`;
       }
 
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       let currentClass = null;
       let nextClass = null;
+
+      // Only calculate current/next if asking for today
+      const isToday = targetDay === days[now.getDay()];
 
       for (const entry of scheduleForDay) {
         const [startH, startM] = entry.start.split(":").map(Number);
@@ -33,41 +57,50 @@ export class CampusAssistantProvider {
         const startTotal = startH * 60 + startM;
         const endTotal = endH * 60 + endM;
 
-        if (currentMinutes >= startTotal && currentMinutes < endTotal) {
-          currentClass = entry;
-        } else if (currentMinutes < startTotal && !nextClass) {
-          nextClass = entry;
+        if (isToday) {
+          if (currentMinutes >= startTotal && currentMinutes < endTotal) {
+            currentClass = entry;
+          } else if (currentMinutes < startTotal && !nextClass) {
+            nextClass = entry;
+          }
         }
       }
 
-      if (q.includes("today")) {
-        return `Today is ${currentDay}. You have ${scheduleForDay.filter(s => !s.is_recess).length} classes scheduled. Check the Timetable section for full details!`;
-      }
-
-      if (currentClass) {
-        if (currentClass.is_recess) return "You are currently in Recess.";
-        let response = `You currently have **${currentClass.subject}**`;
-        if (currentClass.faculty_initials) {
-          const faculty = facultyData.find(f => f.initials === currentClass.faculty_initials);
-          if (faculty) response += ` with **${faculty.name}**`;
+      // Check for specific "now" or "current" queries first
+      if (q.includes("now") || q.includes("current") || q.includes("going on") || q.includes("present") || q.includes("which class")) {
+        if (currentClass) {
+          if (currentClass.is_recess) return "You are currently in Recess.";
+          let response = `Right now, you have **${currentClass.subject}**`;
+          if (currentClass.faculty_initials) {
+            const faculty = facultyData.find(f => f.initials === currentClass.faculty_initials);
+            if (faculty) response += ` with **${faculty.name}**`;
+          }
+          return response + ` until ${currentClass.end}.`;
+        } else if (nextClass) {
+          return `You don't have a class right now. Your next class is **${nextClass.subject}** at ${nextClass.start}.`;
+        } else {
+          return "You have no more classes for today!";
         }
-        return response + ` until ${currentClass.end}.`;
       }
 
-      if (nextClass) {
-        return `Your next class is **${nextClass.subject}** at ${nextClass.start}.`;
+      if (q.includes("next") || q.includes("upcoming") || q.includes("after this")) {
+         if (nextClass) {
+           return `Your next class is **${nextClass.subject}** at ${nextClass.start}.`;
+         }
+         return "You have no more classes scheduled for today!";
       }
 
-      return "You have no more classes scheduled for today!";
+      // Default for "timetable", "today", "schedule"
+      const currentTimeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const scheduleString = scheduleForDay.map(s => {
+        const subject = s.is_recess ? "Recess" : s.subject;
+        return `- ${s.start} to ${s.end}: **${subject}**`;
+      }).join("\n");
+      
+      return `Here is the schedule for **${targetDay}**${isToday ? ` (Current time: ${currentTimeString})` : ''}:\n${scheduleString}`;
     }
 
-    // Intent: Location (e.g. MCA class)
-    if (q.includes("where") || q.includes("location")) {
-      if (q.includes("mca")) {
-        return "MCA classes are currently scheduled on the **3rd floor**.";
-      }
-      return "I only have location information for MCA classes right now (3rd floor).";
-    }
+
 
     // Intent: Faculty Query
     if (q.includes("who teaches") || q.includes("teacher") || q.includes("professor") || q.includes("who is prof")) {

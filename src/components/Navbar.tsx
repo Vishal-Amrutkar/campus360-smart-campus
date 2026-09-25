@@ -10,32 +10,19 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() || 0;
-    
     // Fade background after 40px
     if (latest > 40) {
       setIsScrolled(true);
     } else {
       setIsScrolled(false);
     }
-
-    // Hide navbar on scroll down, show on scroll up (optional, Apple usually keeps it sticky but minimal)
-    if (latest > 150 && latest > previous) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
   });
 
   return (
     <motion.nav
-      variants={{
-        visible: { y: 0, opacity: 1 },
-        hidden: { y: "-100%", opacity: 0 },
-      }}
-      animate={hidden ? "hidden" : "visible"}
-      transition={{ duration: 0.35, ease: "easeInOut" }}
-      className={`fixed top-0 w-full z-40 transition-colors duration-300 ${
+      initial={{ y: 0, opacity: 1 }}
+      animate={{ y: 0, opacity: 1 }}
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
         isScrolled ? "glass-always border-b border-white/5" : "bg-transparent"
       }`}
     >
@@ -57,11 +44,7 @@ export default function Navbar() {
           <Link href="#notices" className="hover:text-white transition-colors">Notices</Link>
         </div>
 
-        <div>
-          <button className="px-5 py-2 text-sm font-medium text-white rounded-full border-gradient glass-always hover:text-glow transition-all duration-300">
-            Explore Campus360
-          </button>
-        </div>
+        {/* Explore Button removed as requested */}
       </div>
     </motion.nav>
   );

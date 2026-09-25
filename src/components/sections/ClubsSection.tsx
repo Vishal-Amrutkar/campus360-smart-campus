@@ -1,19 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clubsData from "@/data/clubs.json";
 import { Users, Calendar as CalendarIcon, X } from "lucide-react";
 
 export default function ClubsSection() {
   const [selectedClub, setSelectedClub] = useState<typeof clubsData[0] | null>(null);
-
-  // Close on escape key
-  if (typeof window !== "undefined") {
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") setSelectedClub(null);
-    });
-  }
 
   return (
     <section id="clubs" className="py-24 px-6 bg-[#050505] relative z-10 border-t border-white/5">
@@ -31,7 +24,7 @@ export default function ClubsSection() {
           {clubsData.map((club,  ) => (
             <div
               key={club.id}
-              onClick={() => setSelectedClub(club)}
+              onClick={(e) => { e.stopPropagation(); setSelectedClub(club); }}
               className="glass border border-white/10 rounded-2xl p-6 hover:border-brand-blue/50 hover:bg-white/5 transition-all cursor-pointer group flex flex-col h-full scroll-scale-reveal"
             >
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition-colors">
@@ -46,7 +39,9 @@ export default function ClubsSection() {
                   <Users className="w-4 h-4" />
                   <span>{club.members.length + 1}</span>
                 </div>
-                <button className="text-brand-blue text-sm font-medium hover:text-brand-cyan transition-colors">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setSelectedClub(club); }}
+                  className="text-brand-blue text-sm font-medium hover:text-brand-cyan transition-colors">
                   View details
                 </button>
               </div>
@@ -56,21 +51,14 @@ export default function ClubsSection() {
       </div>
 
       {/* Modal / Sheet */}
-      <AnimatePresence>
-        {selectedClub && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-            <motion.div
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedClub(null)}
-              className="absolute inset-0 bg-[#050505]/80 backdrop-blur-sm"
-            />
-            
-            <motion.div
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="glass border border-white/20 rounded-3xl w-full max-w-2xl relative z-10 overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
+      {selectedClub && (
+        <div
+          onClick={() => setSelectedClub(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-[#050505]/80 backdrop-blur-sm"
+        >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#111] border border-white/20 rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[85vh] z-[100]"
             >
               <div className="p-8 border-b border-white/10 flex justify-between items-start">
                 <div>
@@ -123,10 +111,9 @@ export default function ClubsSection() {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+            </div>
+        </div>
+      )}
     </section>
   );
 }

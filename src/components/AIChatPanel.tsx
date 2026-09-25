@@ -92,7 +92,7 @@ export default function AIChatPanel({ onClose }: AIChatPanelProps) {
             className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
           >
             <div 
-              className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm ${
+              className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm whitespace-pre-wrap ${
                 msg.sender === "user" 
                   ? "bg-white/10 text-white rounded-tr-sm" 
                   : "bg-brand-blue/10 border border-brand-blue/20 text-brand-cyan rounded-tl-sm"
